@@ -24,17 +24,30 @@ function styled(data = null) {
          }
          result += options[0];
          if (args.length) {
-            result += args.map((item, index) => test(item) + options[index + 1]);
+            result += args.map((item, index) => checkType(item) + options[index + 1]);
          }
 
-         function test(a) {
-            return typeof a === 'function' ? test(a(props)) : a || '';
+         function checkType(arg) {
+            return typeof arg === 'function' ? checkType(arg(props)) : arg || '';
+         }
+         const finalResult = result.replace(/\n|\t|\,/g, "").replace(/;;/g, ";");
+
+         function deleteDublications(string) {
+            const cache = {};
+            const arr = [];
+            const seperation = string.split(';').map(style => style.split(':'));
+            if (seperation.length) {
+               seperation.map(style => cache[style[0]] = style[1]);
+               for (key in cache) {
+                  arr.push([key + ':' + cache[key]]);
+               }
+               const association = arr.map(style => style.join(':'));
+               return association.join(';').replace(/:undefined/g, '');
+            }
+            return string;
          }
 
-         let arr = result.replace(/\n|\t|\,/g, "").replace(/;;/g, ";");
-         // return result.replace(/\n|\t|\,/g, "").replace(/;;/g, ";");
-         return arr;
-
+         return deleteDublications(finalResult);
       };
    };
 }
