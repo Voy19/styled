@@ -39,14 +39,12 @@ function styled(data = null) {
             if (seperation.length) {
                seperation.map(style => cache[style[0]] = style[1]);
                for (key in cache) {
-                  arr.push([key + ':' + cache[key]]);
+                  arr.push(key + ':' + cache[key]);
                }
-               const association = arr.map(style => style.join(':'));
-               return association.join(';').replace(/:undefined/g, '');
+               return arr.join(';').replace(/:undefined/g, '');
             }
             return string;
          }
-
          return deleteDublications(finalResult);
       };
    };
